@@ -1,33 +1,26 @@
 {
   "name": "hubot-aotw",
   "description": "Track and manage the album of the week.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Thomas Gaubert",
   "license": "MIT",
-
   "keywords": [
     "hubot",
     "hubot-aotw",
     "aotw"
   ],
-
   "repository": {
     "type": "git",
     "url": "git://github.com/texasgamer/hubot-aotw.git"
   },
-
   "bugs": {
     "url": "https://github.com/texasgamer/hubot-aotw/issues"
   },
-
   "dependencies": {
     "coffee-script": "~1.6"
   },
-
-  "devDependencies": { },
-
+  "devDependencies": {},
   "main": "index.coffee",
-
   "scripts": {
     "test": "script/test"
   }

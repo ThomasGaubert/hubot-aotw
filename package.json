@@ -24,12 +24,7 @@
     "coffee-script": "~1.6"
   },
 
-  "devDependencies": {
-    "mocha": "*",
-    "chai": "*",
-    "sinon-chai": "*",
-    "sinon": "*"
-  },
+  "devDependencies": { },
 
   "main": "index.coffee",
 

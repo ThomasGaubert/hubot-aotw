@@ -14,7 +14,7 @@
 #   aotw nominate <url> - nominate an album *
 #   aotw nominations [length] - view all current nominations, optionally limited to [length] *
 #   aotw reset - reset all AOTW data *~
-#   aotw select <nomination index> - select the AOTW and reset nominations *~
+#   aotw select [nomination index] - select the AOTW (of given index or random) and reset nominations *~
 #
 # Author:
 #   Thomas Gaubert
@@ -84,12 +84,10 @@ class AotwManager
     nominate: (msg) ->
         if msg.match[1] != ""
             url = msg.match[2]
-            urlPattern = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[.\!\/\\w]*))?)/ig
-            # To be implemented in a future release
-            # spotify = /https?:\/\/(open|play)\.spotify\.com\/(album|track|user\/[^\/]+\/playlist)\/([a-zA-Z0-9]+)/
-            # googlePlay = /https?:\/\/(music|play)\.google\.com\/music\/m\/([a-zA-Z0-9]+)/
-            # youtube = /https?:\/\/(?:www\.)?youtube.com\/watch\?(?=.*v=\w+)(?:\S+)?/
-            if url.match urlPattern
+            spotify = /https?:\/\/(open|play)\.spotify\.com\/(album|track|user\/[^\/]+\/playlist)\/([a-zA-Z0-9]+)/
+            googlePlay = /https?:\/\/(music|play)\.google\.com\/music\/m\/([a-zA-Z0-9]+)/
+            youtube = /https?:\/\/(?:www\.)?youtube.com\/watch\?(?=.*v=\w+)(?:\S+)?/
+            if url.match(spotify) or url.match(googlePlay) or url.match(youtube)
                 user = msg.message.user.name.toLowerCase()
                 try
                     @storage.nominations.push(user: user, url: msg.match[2])
@@ -127,7 +125,7 @@ class AotwManager
         msg.send "aotw nominate <url> - nominate an album *"
         msg.send "aotw nominations [length] - view all current nominations, optionally limited to [length] *"
         msg.send "aotw reset - reset all AOTW data *~"
-        msg.send "aotw select <nomination index> - select the AOTW and reset nominations *~"
+        msg.send "aotw select [nomination index] - select the AOTW (of given index or random) and reset nominations *~"
         if @channels.length > 0
             msg.send "Commands denoted by * are restricted to specific channels, ~ are limited to AOTW admins"
         else
@@ -156,7 +154,16 @@ class AotwManager
             else
                 msg.send "Invalid selection: invalid nomination index"
         else
-            msg.send "Invalid selection: missing nomination index"
+            selected = @storage.nominations[Math.floor(Math.random() * @storage.nominations.length)]
+            try
+                @storage.history.push selected
+            catch
+                @storage.history = []
+                @storage.history.push selected
+            finally
+                @storage.nominations = []
+                @save
+                msg.send "Randomly selected #{selected["url"]}, nominated by #{selected["user"]}"
 
 module.exports = (robot) ->
 

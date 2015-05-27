@@ -10,7 +10,7 @@ Track and manage the album of the week.
 * `aotw nominate <url>` - nominate an album *
 * `aotw nominations [length]` - view all current nominations, optionally limited to `[length]` *
 * `aotw reset` - reset all AOTW data * ~
-* `aotw select <nomination index>` - select the AOTW and reset nominations * ~
+* `aotw select [nomination index]` - select the AOTW (of given index or random) and reset nominations * ~
 
 Commands denoted by * are restricted to specific channels, ~ are limited to AOTW admins.
 

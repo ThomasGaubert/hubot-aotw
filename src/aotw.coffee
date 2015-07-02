@@ -35,7 +35,7 @@ class AotwManager
 
         # Restrict commands denoted by a tilde to the following users.
         # If left empty, any user can issue restricted commands.
-        @admins = ["colt", "thomas", "Shell"]
+        @admins = ["colt", "thomas","stevendiaz", "Shell"] #hehe
 
         @robot.brain.on "loaded", storageLoaded
         storageLoaded()
@@ -87,7 +87,8 @@ class AotwManager
             spotify = /https?:\/\/(open|play)\.spotify\.com\/(album|track|user\/[^\/]+\/playlist)\/([a-zA-Z0-9]+)/
             googlePlay = /https?:\/\/(music|play)\.google\.com\/music\/m\/([a-zA-Z0-9]+)/
             youtube = /https?:\/\/(?:www\.)?youtube.com\/watch\?(?=.*v=\w+)(?:\S+)?/
-            if url.match(spotify) or url.match(googlePlay) or url.match(youtube)
+            soundCloud = /^https?:\/\/(soundcloud.com|snd.sc)\/(.*)$/   
+            if url.match(spotify) or url.match(googlePlay) or url.match(youtube) or url.match(soundCloud)
                 user = msg.message.user.name.toLowerCase()
                 try
                     @storage.nominations.push(user: user, url: msg.match[2])

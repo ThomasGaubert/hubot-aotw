@@ -25,7 +25,6 @@ class AotwManager
             @storage = @robot.brain.data.aotw ||= {
                 nominations: []
                 history: []
-                nominationsByUser: {}
             }
 
             @robot.logger.debug "AOTW data loaded: " + JSON.stringify(@storage)
@@ -91,19 +90,14 @@ class AotwManager
             soundCloud = /^https?:\/\/(soundcloud.com)\/(.*)\/(sets)\/(.*)$/   
             if url.match(spotify) or url.match(googlePlay) or url.match(youtube) or url.match(soundCloud)
                 user = msg.message.user.name.toLowerCase()
-                if(@storage.nominationsByUser[user] <= 3)
-                    try
-                        @storage.nominations.push(user: user, url: msg.match[2])
-                        #increment stored nominations of user by 1
-                        @storage.nominationsByUser[user] = @storage.nominationsByUser[user] + 1;
-                    catch
-                        @storage.nominations = []
-                        @storage.nominations.push(user: user, url: msg.match[2])
-                    finally
-                        @save
-                        msg.send "Nomination saved"
-                else
-                    msg.send "Invalid nomination: nominations exceeded. Limit: 3"
+                try
+                    @storage.nominations.push(user: user, url: msg.match[2])
+                catch
+                    @storage.nominations = []
+                    @storage.nominations.push(user: user, url: msg.match[2])
+                finally
+                    @save
+                    msg.send "Nomination saved"
             else
                 msg.send "Invalid nomination: invalid url"
         else
@@ -141,7 +135,6 @@ class AotwManager
     reset: (msg) ->
         @storage.nominations = []
         @storage.history = []
-        @storage.nominationsByUser = {}
         @save
         msg.send "All AOTW data has been reset"
 
@@ -157,7 +150,6 @@ class AotwManager
                     @storage.history.push selected
                 finally
                     @storage.nominations = []
-                    @storage.nominationsByUser = {}
                     @save
                     msg.send "Selected #{selected["url"]}, nominated by #{selected["user"]}"
             else
@@ -171,7 +163,6 @@ class AotwManager
                 @storage.history.push selected
             finally
                 @storage.nominations = []
-                @storage.nominationsByUser = {}
                 @save
                 msg.send "Randomly selected #{selected["url"]}, nominated by #{selected["user"]}"
 

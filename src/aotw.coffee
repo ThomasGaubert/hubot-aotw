@@ -181,8 +181,8 @@ module.exports = (robot) ->
     robot.hear /^\s*aotw\s*$/i, (msg) ->
         msg.send "Invalid command, say \"aotw help\" for help"
 
-    robot.hear /^\s*aotw(.*) (.*)/i, (msg) ->
-        cmd = msg.match[0].split(" ")[1]
+    robot.hear /^\s*aotw (.*)/i, (msg) ->
+        cmd = msg.match[1]
         switch cmd
             when "current" then checkMessage msg, aotw.printCurrentAotw
             when "help" then aotw.printHelp msg

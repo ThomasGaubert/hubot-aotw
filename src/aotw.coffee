@@ -136,7 +136,7 @@ class AotwManager
         if msg.match[1] != "history"
             limit = msg.match[1].split(" ")[1]
         else
-            limit = 9999
+            limit = 10
 
         if @storage.history && @storage.history.length > 0
             msg.send "Total of #{@storage.history.length} previous AOTWs"
@@ -168,7 +168,7 @@ class AotwManager
         if msg.match[1] != "nominations"
             limit = msg.match[1].split(" ")[1]
         else
-            limit = 9999
+            limit = 10
 
         if @storage.nominations && @storage.nominations.length > 0
             msg.send "Total of #{@storage.nominations.length} nominations"

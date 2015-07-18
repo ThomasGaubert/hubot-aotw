@@ -9,6 +9,7 @@
 #
 # Commands:
 #   aotw current - view the current AOTW *
+#   aotw debug <about|data|submit url|update> - debugging tools *~
 #   aotw help - display AOTW help
 #   aotw history [length] - view all historical AOTWs, optionally limited to [length] *
 #   aotw nominate <url> - nominate an album *
@@ -37,6 +38,9 @@ class AotwManager
         # If left empty, any user can issue restricted commands.
         @admins = ["colt", "thomas", "stevendiaz", "Shell"]
 
+        # Tracks if updates have been downloaded since last reboot
+        @downloaded_updates = false
+
         @robot.brain.on "loaded", storageLoaded
         storageLoaded()
 
@@ -62,8 +66,68 @@ class AotwManager
         if @storage.history && @storage.history.length > 0
             aotw = @storage.history[@storage.history.length - 1]
             msg.send "Current AOTW: #{aotw["url"]}, nominated by #{aotw["user"]}"
-        else
-            msg.send "No current album of the week"
+        else msg.send "No current album of the week"
+
+    debug: (msg) ->
+        if msg.match[1] != "debug"
+            arg = msg.match[1].split(" ")[1]
+            switch arg
+                when "about"
+                    try
+                        @exec = require('child_process').exec
+                        @exec 'npm view hubot-aotw version', (error, stdout, stderr) ->
+                            if error
+                                msg.send "Unable to get version: " + stderr
+                            else output = stdout+''
+                            msg.send "hubot-aotw v#{output}"
+                    catch error
+                        msg.send "Unable to get version: " + error
+                when "data"
+                    if @storage.history
+                        msg.send "History (@storage.history - #{@storage.history.length} entries):"
+                        msg.send JSON.stringify(@storage.history)
+                    else msg.send "No data currently stored in @storage.history"
+
+                    if @storage.nominations
+                        msg.send "Nominations (@storage.nominations - #{@storage.nominations.length} entries):"
+                        msg.send JSON.stringify(@storage.nominations)
+                    else msg.send "No data currently stored in @storage.nominations"
+                when "submit"
+                    if msg.match[1] != "debug submit"
+                        url = msg.match[1].split(" ")[2]
+                        spotify = /^https?:\/\/(open|play)\.spotify\.com\/(album|track|user\/[^\/]+\/playlist)\/([a-zA-Z0-9]+)$/
+                        googlePlay = /^https?:\/\/(music|play)\.google\.com\/music\/m\/([a-zA-Z0-9]+)$/
+                        youtube = /^https?:\/\/(?:www\.)?youtube.com\/watch\?(?=.*v=\w+)(?:\S+)?$/
+                        soundCloud = /^https?:\/\/(soundcloud.com)\/(.*)\/(sets)\/(.*)$/
+                        if url.match(spotify) or url.match(googlePlay) or url.match(youtube) or url.match(soundCloud)
+                            msg.send "Valid nomination URL"
+                        else
+                            msg.send "Invalid nomination URL"
+                    else msg.send "Invalid command: missing url"
+                when "update"
+                    try
+                        @exec = require('child_process').exec
+                        msg.send "Checking for updates..."
+                        @exec 'npm update', (error, stdout, stderr) ->
+                            if error
+                                msg.send "Update failed: " + stderr
+                            else output = stdout+''
+
+                            if /node_modules/.test output
+                                msg.send "Dependencies updated:\n" + output
+                                changes = true
+                            else msg.send "No updates are currently available"
+
+                            if changes
+                                @downloaded_updates = true
+                                msg.send "Restart to apply updates"
+                            else
+                                if @downloaded_updates
+                                    msg.send "Updates are pending, restart to apply"
+                    catch error
+                        msg.send "Update failed: " + error
+                else msg.send "Invalid command: invalid debug argument"
+        else msg.send "Invalid command: missing debug argument"
 
     printHistory: (msg) ->
         if msg.match[1] != "history"
@@ -98,10 +162,8 @@ class AotwManager
                 finally
                     @save
                     msg.send "Nomination saved"
-            else
-                msg.send "Invalid nomination: invalid url"
-        else
-            msg.send "Invalid nomination: missing url"
+            else msg.send "Invalid nomination: invalid url"
+        else msg.send "Invalid nomination: missing url"
 
     printNominations: (msg) ->
         if msg.match[1] != "nominations"
@@ -116,11 +178,11 @@ class AotwManager
                 nomination = @storage.nominations[i]
                 msg.send "#{i + 1} - #{nomination["user"]} - #{nomination["url"]}"
                 i++
-        else
-            msg.send "No current nominations"
+        else msg.send "No current nominations"
 
     printHelp: (msg) ->
         msg.send "aotw current - view the current AOTW *"
+        msg.send "aotw debug <about|data|submit url|update> - debugging tools *~"
         msg.send "aotw help - display AOTW help"
         msg.send "aotw history [length] - view all historical AOTWs, optionally limited to [length] *"
         msg.send "aotw nominate <url> - nominate an album *"
@@ -129,8 +191,7 @@ class AotwManager
         msg.send "aotw select [nomination index] - select the AOTW (of given index or random) and reset nominations *~"
         if @channels.length > 0
             msg.send "Commands denoted by * are restricted to specific channels, ~ are limited to AOTW admins"
-        else
-            msg.send "Commands denoted by ~ are limited to AOTW admins"
+        else msg.send "Commands denoted by ~ are limited to AOTW admins"
 
     reset: (msg) ->
         @storage.nominations = []
@@ -152,8 +213,7 @@ class AotwManager
                     @storage.nominations = []
                     @save
                     msg.send "Selected #{selected["url"]}, nominated by #{selected["user"]}"
-            else
-                msg.send "Invalid selection: invalid nomination index"
+            else msg.send "Invalid selection: invalid nomination index"
         else
             selected = @storage.nominations[Math.floor(Math.random() * @storage.nominations.length)]
             try
@@ -185,6 +245,7 @@ module.exports = (robot) ->
         cmd = msg.match[1].split(" ")[0]
         switch cmd
             when "current" then checkMessage msg, aotw.printCurrentAotw
+            when "debug" then checkRestrictedMessage msg, aotw.debug
             when "help" then aotw.printHelp msg
             when "history" then checkMessage msg, aotw.printHistory
             when "nominate" then checkMessage msg, aotw.nominate

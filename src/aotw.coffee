@@ -143,7 +143,7 @@ class AotwManager
             i = 0
             while i <= @storage.history.length - 1 && i < limit
                 album = @storage.history[i]
-                msg.send "#{i + 1} - #{album["user"]} - #{album["url"]}"
+                msg.send "#{i + 1} - #{album["user"].slice(0, 1) + "." + album["user"].slice(1)} - #{album["url"]}"
                 i++
         else
             msg.send "No previous AOTWs"
@@ -175,7 +175,7 @@ class AotwManager
             i = 0
             while i < @storage.nominations.length && i < limit
                 nomination = @storage.nominations[i]
-                msg.send "#{i + 1} - #{nomination["user"]} - #{nomination["url"]}"
+                msg.send "#{i + 1} - #{nomination["user"].slice(0, 1) + "." + nomination["user"].slice(1)} - #{nomination["url"]}"
                 i++
         else msg.send "No current nominations"
 

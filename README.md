@@ -5,6 +5,7 @@ Track and manage the album of the week.
 ## Usage
 
 * `aotw current` - view the current AOTW *
+* `aotw debug <about|data|submit url|update>` - debugging tools *~
 * `aotw help` - display AOTW help
 * `aotw history [length]` - view all historical AOTWs, optionally limited to `[length]` *
 * `aotw nominate <url>` - nominate an album *

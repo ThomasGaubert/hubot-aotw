@@ -55,15 +55,12 @@ class AotwManager
             msg.send "You must be in a valid channel to use this command"
             return false
 
-    validUrl: (url) ->
+    validUrl = (url) ->
         spotify = /^https?:\/\/(open|play)\.spotify\.com\/(album|track|user\/[^\/]+\/playlist)\/([a-zA-Z0-9]+)$/
         googlePlay = /^https?:\/\/(music|play)\.google\.com\/music\/m\/([a-zA-Z0-9]+)$/
         youtube = /^https?:\/\/(?:www\.)?youtube.com\/watch\?(?=.*v=\w+)(?:\S+)?$/
         soundCloud = /^https?:\/\/(soundcloud.com)\/(.*)\/(sets)\/(.*)$/
-        if url.match(spotify) or url.match(googlePlay) or url.match(youtube) or url.match(soundCloud)
-            return true
-        else
-            return false
+        url.match(spotify) or url.match(googlePlay) or url.match(youtube) or url.match(soundCloud)
 
     checkPermission: (msg) ->
         if @admins.length == 0 || msg.message.user.name in @admins
@@ -106,14 +103,6 @@ class AotwManager
                     if msg.match[1] != "debug submit"
                         url = msg.match[1].split(" ")[2]
                         if validUrl url
-                            msg.send "VALID"
-                        else
-                            msg.send "INVALID"
-                        spotify = /^https?:\/\/(open|play)\.spotify\.com\/(album|track|user\/[^\/]+\/playlist)\/([a-zA-Z0-9]+)$/
-                        googlePlay = /^https?:\/\/(music|play)\.google\.com\/music\/m\/([a-zA-Z0-9]+)$/
-                        youtube = /^https?:\/\/(?:www\.)?youtube.com\/watch\?(?=.*v=\w+)(?:\S+)?$/
-                        soundCloud = /^https?:\/\/(soundcloud.com)\/(.*)\/(sets)\/(.*)$/
-                        if url.match(spotify) or url.match(googlePlay) or url.match(youtube) or url.match(soundCloud)
                             msg.send "Valid nomination URL"
                         else
                             msg.send "Invalid nomination URL"
@@ -162,11 +151,7 @@ class AotwManager
     nominate: (msg) ->
         if msg.match[1] != "nominate"
             url = msg.match[1].split(" ")[1]
-            spotify = /^https?:\/\/(open|play)\.spotify\.com\/(album|track|user\/[^\/]+\/playlist)\/([a-zA-Z0-9]+)$/
-            googlePlay = /^https?:\/\/(music|play)\.google\.com\/music\/m\/([a-zA-Z0-9]+)$/
-            youtube = /^https?:\/\/(?:www\.)?youtube.com\/watch\?(?=.*v=\w+)(?:\S+)?$/
-            soundCloud = /^https?:\/\/(soundcloud.com)\/(.*)\/(sets)\/(.*)$/
-            if url.match(spotify) or url.match(googlePlay) or url.match(youtube) or url.match(soundCloud)
+            if validUrl url
                 user = msg.message.user.name.toLowerCase()
                 try
                     @storage.nominations.push(user: user, url: url)

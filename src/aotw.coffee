@@ -55,6 +55,16 @@ class AotwManager
             msg.send "You must be in a valid channel to use this command"
             return false
 
+    validUrl: (url) ->
+        spotify = /^https?:\/\/(open|play)\.spotify\.com\/(album|track|user\/[^\/]+\/playlist)\/([a-zA-Z0-9]+)$/
+        googlePlay = /^https?:\/\/(music|play)\.google\.com\/music\/m\/([a-zA-Z0-9]+)$/
+        youtube = /^https?:\/\/(?:www\.)?youtube.com\/watch\?(?=.*v=\w+)(?:\S+)?$/
+        soundCloud = /^https?:\/\/(soundcloud.com)\/(.*)\/(sets)\/(.*)$/
+        if url.match(spotify) or url.match(googlePlay) or url.match(youtube) or url.match(soundCloud)
+            return true
+        else
+            return false
+
     checkPermission: (msg) ->
         if @admins.length == 0 || msg.message.user.name in @admins
             return true
@@ -95,6 +105,10 @@ class AotwManager
                 when "submit"
                     if msg.match[1] != "debug submit"
                         url = msg.match[1].split(" ")[2]
+                        if validUrl url
+                            msg.send "VALID"
+                        else
+                            msg.send "INVALID"
                         spotify = /^https?:\/\/(open|play)\.spotify\.com\/(album|track|user\/[^\/]+\/playlist)\/([a-zA-Z0-9]+)$/
                         googlePlay = /^https?:\/\/(music|play)\.google\.com\/music\/m\/([a-zA-Z0-9]+)$/
                         youtube = /^https?:\/\/(?:www\.)?youtube.com\/watch\?(?=.*v=\w+)(?:\S+)?$/

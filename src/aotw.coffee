@@ -66,8 +66,8 @@ class AotwManager
             msg.send "No current album of the week"
 
     printHistory: (msg) ->
-        if msg.match[1] != ""
-            limit = msg.match[2]
+        if msg.match[1] != "history"
+            limit = msg.match[1].split(" ")[1]
         else
             limit = 9999
 
@@ -82,19 +82,19 @@ class AotwManager
             msg.send "No previous AOTWs"
 
     nominate: (msg) ->
-        if msg.match[1] != ""
-            url = msg.match[2]
+        if msg.match[1] != "nominate"
+            url = msg.match[1].split(" ")[1]
             spotify = /^https?:\/\/(open|play)\.spotify\.com\/(album|track|user\/[^\/]+\/playlist)\/([a-zA-Z0-9]+)$/
             googlePlay = /^https?:\/\/(music|play)\.google\.com\/music\/m\/([a-zA-Z0-9]+)$/
             youtube = /^https?:\/\/(?:www\.)?youtube.com\/watch\?(?=.*v=\w+)(?:\S+)?$/
-            soundCloud = /^https?:\/\/(soundcloud.com)\/(.*)\/(sets)\/(.*)$/   
+            soundCloud = /^https?:\/\/(soundcloud.com)\/(.*)\/(sets)\/(.*)$/
             if url.match(spotify) or url.match(googlePlay) or url.match(youtube) or url.match(soundCloud)
                 user = msg.message.user.name.toLowerCase()
                 try
-                    @storage.nominations.push(user: user, url: msg.match[2])
+                    @storage.nominations.push(user: user, url: url)
                 catch
                     @storage.nominations = []
-                    @storage.nominations.push(user: user, url: msg.match[2])
+                    @storage.nominations.push(user: user, url: url)
                 finally
                     @save
                     msg.send "Nomination saved"
@@ -104,15 +104,15 @@ class AotwManager
             msg.send "Invalid nomination: missing url"
 
     printNominations: (msg) ->
-        if msg.match[1] != ""
-            limit = msg.match[2]
+        if msg.match[1] != "nominations"
+            limit = msg.match[1].split(" ")[1]
         else
             limit = 9999
 
         if @storage.nominations && @storage.nominations.length > 0
             msg.send "Total of #{@storage.nominations.length} nominations"
             i = 0
-            while i < @storage.nominations.length
+            while i < @storage.nominations.length && i < limit
                 nomination = @storage.nominations[i]
                 msg.send "#{i + 1} - #{nomination["user"]} - #{nomination["url"]}"
                 i++
@@ -139,9 +139,9 @@ class AotwManager
         msg.send "All AOTW data has been reset"
 
     select: (msg) ->
-        if msg.match[1] != ""
-            if msg.match[2] <= @storage.nominations.length && msg.match[2] > 0
-                i = msg.match[2]
+        if msg.match[1] != "select"
+            if msg.match[1].split(" ")[1] <= @storage.nominations.length && msg.match[1].split(" ")[1] > 0
+                i = msg.match[1].split(" ")[1]
                 selected = @storage.nominations[i - 1]
                 try
                     @storage.history.push selected
@@ -182,7 +182,7 @@ module.exports = (robot) ->
         msg.send "Invalid command, say \"aotw help\" for help"
 
     robot.hear /^\s*aotw (.*)/i, (msg) ->
-        cmd = msg.match[1]
+        cmd = msg.match[1].split(" ")[0]
         switch cmd
             when "current" then checkMessage msg, aotw.printCurrentAotw
             when "help" then aotw.printHelp msg

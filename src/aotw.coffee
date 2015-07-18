@@ -140,11 +140,13 @@ class AotwManager
 
         if @storage.history && @storage.history.length > 0
             msg.send "Total of #{@storage.history.length} previous AOTWs"
-            i = 0
-            while i <= @storage.history.length - 1 && i < limit
+            i = @storage.history.length - 1
+            count = 0
+            while i >= 0 && count < limit
                 album = @storage.history[i]
-                msg.send "#{i + 1} - #{album["user"].slice(0, 1) + "." + album["user"].slice(1)} - #{album["url"]}"
-                i++
+                msg.send "#{count + 1} - #{album["user"].slice(0, 1) + "." + album["user"].slice(1)} - #{album["url"]}"
+                i--
+                count++
         else
             msg.send "No previous AOTWs"
 
@@ -172,11 +174,13 @@ class AotwManager
 
         if @storage.nominations && @storage.nominations.length > 0
             msg.send "Total of #{@storage.nominations.length} nominations"
-            i = 0
-            while i < @storage.nominations.length && i < limit
+            i = @storage.nominations.length - 1
+            count = 0
+            while i >= 0 && count < limit
                 nomination = @storage.nominations[i]
-                msg.send "#{i + 1} - #{nomination["user"].slice(0, 1) + "." + nomination["user"].slice(1)} - #{nomination["url"]}"
-                i++
+                msg.send "#{count + 1} - #{nomination["user"].slice(0, 1) + "." + nomination["user"].slice(1)} - #{nomination["url"]}"
+                i--
+                count++
         else msg.send "No current nominations"
 
     printHelp: (msg) ->

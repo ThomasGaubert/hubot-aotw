@@ -1,4 +1,5 @@
 # hubot-aotw
+[![Build Status](https://travis-ci.org/ThomasGaubert/hubot-aotw.svg?branch=master)](https://travis-ci.org/ThomasGaubert/hubot-aotw)
 
 Track and manage the album of the week.
 

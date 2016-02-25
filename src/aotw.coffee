@@ -73,6 +73,17 @@ class AotwManager
             return true
         else return true
 
+    uniqueUser = (user) ->
+        if @storage.nominations && @storage.nominations.length > 0
+            i = @storage.nominations.length - 1
+            while i >= 0
+                nomination = @storage.nominations[i]
+                if nomination["user"] == user
+                    return false
+                i--
+            return true
+        else return true
+
     checkPermission: (msg) ->
         if @admins.length == 0 || msg.message.user.name in @admins
             return true
@@ -164,17 +175,19 @@ class AotwManager
     nominate: (msg) ->
         if msg.match[1] != "nominate"
             url = msg.match[1].split(" ")[1]
+            user = msg.message.user.name.toLowerCase()
             if validUrl url
                 if uniqueNomination url
-                    user = msg.message.user.name.toLowerCase()
-                    try
-                        @storage.nominations.push(user: user, url: url)
-                    catch
-                        @storage.nominations = []
-                        @storage.nominations.push(user: user, url: url)
-                    finally
-                        @save
-                        msg.send "Nomination saved"
+                    if uniqueUser user
+                        try
+                            @storage.nominations.push(user: user, url: url)
+                        catch
+                            @storage.nominations = []
+                            @storage.nominations.push(user: user, url: url)
+                        finally
+                            @save
+                            msg.send "Nomination saved"
+                    else msg.send "Invalid nomination: you already nominated an album"
                 else msg.send "Invalid nomination: duplicate url"
             else msg.send "Invalid nomination: invalid url"
         else msg.send "Invalid nomination: missing url"

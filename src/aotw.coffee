@@ -69,7 +69,7 @@ module.exports = (robot) ->
           when "submit"
             if msg.match[1] != "debug submit"
               url = msg.match[1].split(" ")[2]
-              if validUrl url
+              if aotw.validUrl url
                 msg.send "Valid nomination URL"
               else
                 msg.send "Invalid nomination URL"

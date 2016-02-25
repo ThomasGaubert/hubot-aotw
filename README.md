@@ -17,7 +17,7 @@ Commands denoted by * are restricted to specific channels, ~ are limited to AOTW
 
 ## Installation
 
-Run the following command
+Run the following command:
 
     $ npm install hubot-aotw
 

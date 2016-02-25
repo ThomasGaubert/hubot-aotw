@@ -57,7 +57,7 @@ class AotwManager
 
     validUrl = (url) ->
         spotify = /^https?:\/\/(open|play)\.spotify\.com\/(album|track|user\/[^\/]+\/playlist)\/([a-zA-Z0-9]+)$/
-        googlePlay = /^https?:\/\/(music|play)\.google\.com\/music\/m\/([a-zA-Z0-9]+)$/
+        googlePlay = /^https?:\/\/(music|play)\.google\.com\/music\/m\/[a-zA-Z0-9]+\?t=[a-zA-Z0-9_-]+$/
         youtube = /^https?:\/\/(?:www\.)?youtube.com\/watch\?(?=.*v=\w+)(?:\S+)?$/
         soundCloud = /^https?:\/\/(soundcloud.com)\/(.*)\/(sets)\/(.*)$/
         url.match(spotify) or url.match(googlePlay) or url.match(youtube) or url.match(soundCloud)

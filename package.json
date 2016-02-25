@@ -11,10 +11,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/texasgamer/hubot-aotw.git"
+    "url": "git://github.com/ThomasGaubert/hubot-aotw.git"
   },
   "bugs": {
-    "url": "https://github.com/texasgamer/hubot-aotw/issues"
+    "url": "https://github.com/ThomasGaubert/hubot-aotw/issues"
   },
   "dependencies": {
     "coffee-script": "~1.6"

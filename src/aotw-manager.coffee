@@ -57,13 +57,13 @@ class AotwManager
     if index > 0 && index <= @storage.nominations.length
       selected = @storage.nominations[index - 1]
       try
-          @storage.history.push selected
+        @storage.history.push selected
       catch
-          @storage.history = []
-          @storage.history.push selected
+        @storage.history = []
+        @storage.history.push selected
       finally
-          @storage.nominations = []
-          @save
+        @storage.nominations = []
+        @save
       return {user: selected["user"], url: selected["url"]}
     else return undefined
 
@@ -81,10 +81,12 @@ class AotwManager
     if @storage.nominations && @storage.nominations.length > 0
       i = @storage.nominations.length - 1
       while i >= 0
-          nomination = @storage.nominations[i]
-          if nomination["user"] == user || nomination["url"] == url
-              return false
-          i--
+        nomination = @storage.nominations[i]
+        if nomination["url"] == url
+          return "url"
+        if nomination["user"] == user
+          return "user"
+        i--
       return true
     else return true
 

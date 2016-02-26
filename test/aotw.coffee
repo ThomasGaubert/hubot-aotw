@@ -104,12 +104,12 @@ describe 'AotwManager', ->
     it 'restricts urls to one nomination', ->
       a.nominate('user', 'url')
       r = a.validNomination('user2', 'url')
-      expect(r).to.be.false
+      expect(r).to.equal("url")
 
     it 'restricts users to one nomination', ->
       a.nominate('user', 'url')
       r = a.validNomination('user', 'url2')
-      expect(r).to.be.false
+      expect(r).to.equal("user")
 
   describe 'url validation', ->
     it 'validates Spotify urls', ->

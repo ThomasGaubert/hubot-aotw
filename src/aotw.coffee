@@ -152,10 +152,11 @@ module.exports = (robot) ->
       url = msg.match[1].split(" ")[1]
       user = msg.message.user.name.toLowerCase()
       if aotw.validUrl url
-        if aotw.validNomination user, url
+        valid = aotw.validNomination user, url
+        if valid == true
           aotw.nominate user, url
           msg.send "Nomination saved"
-        else msg.send "Invalid nomination: duplicate url or user"
+        else msg.send "Invalid nomination: duplicate #{valid}"
       else msg.send "Invalid nomination: invalid url"
     else msg.send "Invalid nomination: missing url"
 

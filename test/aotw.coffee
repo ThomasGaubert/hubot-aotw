@@ -128,6 +128,10 @@ describe 'AotwManager', ->
       r = a.validUrl('https://soundcloud.com/madeon/sets/youre-on-ft-kyan-remixes')
       expect(r).to.not.be.null
 
+    it 'validates BandCamp urls', ->
+      r = a.validUrl('https://dulltools.bandcamp.com/album/light-up-gold')
+      expect(r).to.not.be.null
+
     it 'handles invalid urls', ->
       r = a.validUrl('https://google.com')
       expect(r).to.be.null

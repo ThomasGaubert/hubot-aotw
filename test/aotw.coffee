@@ -136,6 +136,10 @@ describe 'AotwManager', ->
       r = a.validUrl('https://dulltools.bandcamp.com/album/light-up-gold')
       expect(r).to.not.be.null
 
+    it 'validates iTunes urls', ->
+      r = a.validUrl('https://itunes.apple.com/us/album/views/id1108737195')
+      expect(r).to.not.be.null
+
     it 'handles invalid urls', ->
       r = a.validUrl('https://google.com')
       expect(r).to.be.null

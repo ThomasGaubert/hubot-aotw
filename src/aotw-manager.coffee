@@ -75,7 +75,8 @@ class AotwManager
     youtube = /^https?:\/\/(?:www\.)?(?:youtube.com\/watch\?(?=.*v=\w+)|youtu.be\/)(?:\S+)?$/
     soundCloud = /^https?:\/\/(soundcloud.com)\/(.*)\/(sets)\/(.*)$/
     bandCamp = /^https?:\/\/.*\.bandcamp\.com\/album\/.*$/
-    url.match(spotify) || url.match(googlePlay) || url.match(youtube) || url.match(soundCloud) || url.match(bandCamp)
+    iTunes = /^https?:\/\/(?:www\.)?itunes.apple.com\/[a-zA-Z]{2}\/album\/(?:\S+)?$/
+    url.match(spotify) || url.match(googlePlay) || url.match(youtube) || url.match(soundCloud) || url.match(bandCamp) || url.match(iTunes)
 
   validNomination: (user, url) ->
     if @storage.nominations && @storage.nominations.length > 0

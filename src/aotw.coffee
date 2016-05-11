@@ -49,11 +49,11 @@ module.exports = (robot) ->
         when "about"
           try
             @exec = require('child_process').exec
-            @exec 'npm view hubot-aotw version', (error, stdout, stderr) ->
+            @exec 'npm list hubot-aotw', (error, stdout, stderr) ->
               if error
                 msg.send "Unable to get version: " + stderr
               else output = stdout+''
-              msg.send "hubot-aotw v#{output}"
+              msg.send "#{output}"
           catch error
               msg.send "Unable to get version: " + error
         when "data"

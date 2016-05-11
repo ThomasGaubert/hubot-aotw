@@ -124,6 +124,10 @@ describe 'AotwManager', ->
       r = a.validUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
       expect(r).to.not.be.null
 
+    it 'validates shortened YouTube urls', ->
+      r = a.validUrl('https://youtu.be/dQw4w9WgXcQ')
+      expect(r).to.not.be.null
+
     it 'validates SoundCloud urls', ->
       r = a.validUrl('https://soundcloud.com/madeon/sets/youre-on-ft-kyan-remixes')
       expect(r).to.not.be.null

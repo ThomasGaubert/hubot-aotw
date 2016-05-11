@@ -26,18 +26,6 @@ module.exports = (robot) ->
 
   aotw = new AotwManager(robot)
 
-  cronJob = require('cron').CronJob
-  # Automatically select AOTW on Tuesdays at 6pm CT
-  new cronJob('0 0 18 * * 2', cronChooseAotw, null, true, 'America/Chicago')
-
-  cronChooseAotw = ->
-    if aotw.getNumNominations() > 0
-      selected = aotw.select Math.floor(Math.random() * aotw.getNumNominations()) + 1
-      if selected?
-        robot.messageRoom "#music", "Automatically randomly selected #{selected["url"]}, nominated by #{selected["user"]}"
-      else
-        robot.messageRoom "#music", "Unable to automatically randomly select AOTW: invalid index"
-
   checkMessage = (msg, cmd) ->
     if aotw.validChannel msg.message.user.room
       cmd msg

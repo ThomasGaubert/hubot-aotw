@@ -17,9 +17,7 @@
     "url": "https://github.com/ThomasGaubert/hubot-aotw/issues"
   },
   "dependencies": {
-    "coffee-script": "~1.6",
-    "cron": "^1.1.0",
-    "time": "^0.11.4"
+    "coffee-script": "~1.6"
   },
   "devDependencies": {
     "mocha": "*",

@@ -37,7 +37,7 @@ module.exports = (robot) ->
     else msg.send "You lack permission for this command"
 
   printCurrentAotw = (msg) ->
-    if aotw.getHistory() > 0
+    if aotw.getNumHistory() > 0
       current = aotw.getCurrentAotw()
       msg.send "Current AOTW: #{current["url"]}, nominated by #{current["user"]}"
     else msg.send "No current album of the week"

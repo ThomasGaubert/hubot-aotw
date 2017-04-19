@@ -40,8 +40,14 @@ class AotwManager
 
   reset: ->
     @storage.nominations = []
+    @save
+    
+
+   resetAll: ->
+    @storage.nominations = []
     @storage.history = []
     @save
+
 
   nominate: (user, url) ->
     try
